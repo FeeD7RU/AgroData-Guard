@@ -1,0 +1,41 @@
+services:
+  guard:
+    build: .
+    ports:
+      - "127.0.0.1:8000:8000"
+    environment:
+      API_KEY: ${API_KEY:?Copy .env.example to .env and set API_KEY}
+      DATABASE_URL: sqlite:///data/agroguard.db
+      AGRO_DEMO: "1"
+      AGRO_LLM_MODEL: ${AGRO_LLM_MODEL:-qwen3:14b}
+      AGRO_OLLAMA_URL: http://host.docker.internal:11434
+    volumes:
+      - guard-data:/app/data
+    restart: unless-stopped
+  mqtt:
+    image: eclipse-mosquitto:2
+    profiles: [mqtt]
+    ports:
+      - "127.0.0.1:1883:1883"
+    volumes:
+      - ./config/mosquitto.conf:/mosquitto/config/mosquitto.conf:ro
+      - mqtt-data:/mosquitto/data
+  gateway:
+    build: .
+    profiles: [mqtt]
+    command: ["agroguard", "mqtt", "--host", "mqtt", "--url", "http://guard:8000"]
+    environment:
+      API_KEY: ${API_KEY:?Set API_KEY}
+    volumes:
+      - gateway-data:/app/data
+    depends_on:
+      guard:
+        condition: service_healthy
+      mqtt:
+        condition: service_started
+    healthcheck:
+      disable: true
+volumes:
+  guard-data:
+  mqtt-data:
+  gateway-data:

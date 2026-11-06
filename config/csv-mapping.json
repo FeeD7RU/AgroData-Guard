@@ -1,0 +1,4 @@
+{
+  "mapping": {"timestamp": "time", "sensor_id": "device", "value": "reading"},
+  "defaults": {"schema_version": "1", "feature": "soil_ph", "unit": "pH", "source": "historical_csv"}
+}

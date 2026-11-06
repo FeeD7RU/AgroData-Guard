@@ -1,0 +1,39 @@
+{
+  "window": 48,
+  "min_history": 12,
+  "detection": {
+    "zscore_threshold": 3.5,
+    "robust_z_threshold": 4.0,
+    "iqr_multiplier": 1.5,
+    "max_gap_periods": 3,
+    "rate_recovery_guard": true,
+    "recovery_band": 2.5,
+    "recovery_reference_fraction": 0.8,
+    "recovery_stable_samples": 3,
+    "trend_require_change": true,
+    "trend_samples": 12,
+    "trend_direction": 0.85,
+    "trend_change_scale": 8
+  },
+  "max_batch": 500,
+  "max_body_bytes": 1048576,
+  "detectors": ["range", "rate", "robust_z", "stuck", "trend"],
+  "corrector": "median",
+  "policy": {"anomaly_threshold": 0.8, "correction_threshold": 0.8, "auto_correct": false},
+  "features": {
+    "temperature": {"min": -50, "max": 70, "max_rate": 12, "noise_floor": 0.3, "unit": "°C", "period_seconds": 60},
+    "humidity": {"min": 0, "max": 100, "max_rate": 15, "noise_floor": 1, "unit": "%", "period_seconds": 90},
+    "soil_moisture": {"min": 0, "max": 100, "max_rate": 10, "noise_floor": 0.4, "unit": "%", "period_seconds": 120},
+    "pressure": {"min": 850, "max": 1100, "noise_floor": 0.5, "unit": "hPa", "period_seconds": 60},
+    "light": {"min": 0, "max": 150000, "noise_floor": 100, "unit": "lux", "period_seconds": 60}
+  },
+  "simulation": {
+    "seed": 42,
+    "nodes": 2,
+    "features": {
+      "temperature": {"base": 23, "amplitude": 4, "noise": 0.15, "phase": 0},
+      "humidity": {"base": 65, "amplitude": 12, "noise": 0.4, "phase": 3.141592653589793},
+      "soil_moisture": {"base": 42, "amplitude": 1.2, "noise": 0.15, "phase": 1}
+    }
+  }
+}
